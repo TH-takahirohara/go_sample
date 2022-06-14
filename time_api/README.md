@@ -13,7 +13,8 @@ go get -u github.com/gorilla/mux
   - https://casualdevelopers.com/tech-tips/lets-create-rest-api-with-gorilla-mux-on-golang/
 - time.Location
   - https://qiita.com/yyoshiki41/items/3acfe3c03b5a3a1e7592
-- w.WriteHeaderの例
+- ステータスコードの返却（w.WriteHeaderを使う）
   - https://qiita.com/gold-kou/items/99507d33b8f8ddd96e3a#%E3%83%91%E3%82%B9%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF
+  - https://qiita.com/convto/items/2822d029349cb1b4df93
 - クエリパラメータの使い方
   - https://zetcode.com/golang/gorilla-mux/
