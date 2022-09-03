@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-type RepeatString struct {
-	Str string `json:"repeat_str"`
+type ReturnString struct {
+	Str string `json:"str"`
 }
 
 // Repeat: 文字列を繰り返して結合
@@ -18,14 +18,24 @@ func repeatStrings(w http.ResponseWriter, r *http.Request) {
   var mul int
   mulStr := r.URL.Query().Get("num")
 	mul, _ = strconv.Atoi(mulStr)
-	repStr := RepeatString{strings.Repeat(str, mul)}
+	repStr := ReturnString{strings.Repeat(str, mul)}
 
   w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(repStr)
 }
 
+// ToUpper: 小文字を大文字に変換
+func upperStrings(w http.ResponseWriter, r *http.Request) {
+	str := r.URL.Query().Get("str")
+  res := ReturnString{strings.ToUpper(str)}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
 func main() {
 	http.HandleFunc("/repeat", repeatStrings)
+	http.HandleFunc("/upper", upperStrings)
 
 	log.Println("Listening...")
 	http.ListenAndServe("localhost:8000", nil)
