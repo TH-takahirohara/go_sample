@@ -33,9 +33,20 @@ func upperStrings(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
+// Join: 文字列を結合
+func joinStrings(w http.ResponseWriter, r *http.Request) {
+	str1 := r.URL.Query().Get("str1")
+	str2 := r.URL.Query().Get("str2")
+	res := ReturnString{strings.Join([]string{str1, str2}, ",")}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
 func main() {
 	http.HandleFunc("/repeat", repeatStrings)
 	http.HandleFunc("/upper", upperStrings)
+	http.HandleFunc("/join", joinStrings)
 
 	log.Println("Listening...")
 	http.ListenAndServe("localhost:8000", nil)
