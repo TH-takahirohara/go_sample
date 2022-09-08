@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -10,6 +11,11 @@ import (
 
 type ReturnString struct {
 	Str string `json:"str"`
+}
+
+type JoinString struct {
+	Str1 string
+	Str2 string
 }
 
 // Repeat: 文字列を繰り返して結合
@@ -43,10 +49,26 @@ func joinStrings(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
+// Join: 文字列を結合 (jSON形式でstr1, str2をPOST)
+func joinStringsPost(w http.ResponseWriter, r *http.Request) {
+	var js JoinString
+	if err := json.NewDecoder(r.Body).Decode(&js); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "invalid request body")
+		return
+	}
+
+	res := ReturnString{strings.Join([]string{js.Str1, js.Str2}, ",")}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
 func main() {
 	http.HandleFunc("/repeat", repeatStrings)
 	http.HandleFunc("/upper", upperStrings)
 	http.HandleFunc("/join", joinStrings)
+	http.HandleFunc("/joinpost", joinStringsPost)
 
 	log.Println("Listening...")
 	http.ListenAndServe("localhost:8000", nil)
