@@ -52,8 +52,8 @@ func joinStrings(w http.ResponseWriter, r *http.Request) {
 // Join: 文字列を結合 (jSON形式でstr1, str2をPOST)
 // 参考: https://www.twihike.dev/docs/golang-web/json-request
 func joinStringsPost(w http.ResponseWriter, r *http.Request) {
-	var js JoinString
-	if err := json.NewDecoder(r.Body).Decode(&js); err != nil {
+	js := &JoinString{}
+	if err := json.NewDecoder(r.Body).Decode(js); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprint(w, "invalid request body")
 		return
