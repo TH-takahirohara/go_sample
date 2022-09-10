@@ -37,7 +37,12 @@ func sqrt(w http.ResponseWriter, r *http.Request) {
 // 0~maxnumの間の乱数値(整数)を返す
 func randomInt(w http.ResponseWriter, r *http.Request) {
 	numStr := r.URL.Query().Get("maxnum")
-	num, _ := strconv.Atoi(numStr)
+	num, err := strconv.Atoi(numStr)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "maxnum must be integer")
+		return
+	}
 	rand.Seed(time.Now().UnixNano())
   res := ReturnRandom{rand.Intn(num)}
 
