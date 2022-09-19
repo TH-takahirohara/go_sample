@@ -1,6 +1,7 @@
 ## docker-gs-ping
 - [Go言語 - イメージのビルド](https://matsuand.github.io/docs.docker.jp.onthefly/language/golang/build-images/)
 - [Go言語 - コンテナーの実行](https://matsuand.github.io/docs.docker.jp.onthefly/language/golang/run-containers/)
+- [Go言語 - テストの実行](https://matsuand.github.io/docs.docker.jp.onthefly/language/golang/run-tests/)
 
 ### 実行したこと
 - [サイト](https://matsuand.github.io/docs.docker.jp.onthefly/language/golang/build-images/)のmain.goのコードをコピー
@@ -18,4 +19,10 @@ docker run -p 8080:8080 docker-gs-ping
 - 下記コマンドでデタッチモードでコンテナを起動し、動作を確認
 ```
 docker run -d -p 8080:8080 docker-gs-ping
+```
+
+### テストの実行
+- `main_test.go`作成後、下記コマンドを実行
+```
+go test -v ./...
 ```
