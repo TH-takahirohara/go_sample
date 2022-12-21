@@ -17,7 +17,7 @@ func TestUnmarshalFruits(t *testing.T) {
 		t.Fatalf("failed to unmarshal input string: %v", err)
 	}
 	for i, f := range fruits {
-		if f.Name != wants[i].Name || f.Color != wants[i].Color {
+		if f != wants[i] {
 			t.Fatal("return value is not correct")
 		}
 	}
