@@ -4,7 +4,7 @@ import "testing"
 
 func TestUnmarshalFruits(t *testing.T) {
 	testStr := `
-  [{
+	[{
 		"name":"apple", "color":"red"
 	},{
 		"name":"banana", "color":"yellow"
