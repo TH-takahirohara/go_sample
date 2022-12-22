@@ -18,3 +18,12 @@ func UnmarshalFruits(jsonStr string) ([]Fruit, error) {
 	}
 	return *fruits, nil
 }
+
+func MarshalFruits(fruits []Fruit) (string, error) {
+  jsonData, err := json.Marshal(fruits)
+  if err != nil {
+		return "", fmt.Errorf("cannnot marshal input fruits: %w", err)
+	}
+	jsonStr := string(jsonData)
+	return jsonStr, nil
+}

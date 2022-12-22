@@ -22,3 +22,19 @@ func TestUnmarshalFruits(t *testing.T) {
 		}
 	}
 }
+
+func TestMarshalFruits(t *testing.T) {
+	fruits := []Fruit{
+		{Name: "apple", Color: "red"},
+		{Name: "banana", Color: "yellow"},
+	}
+	wants := `[{"name":"apple","color":"red"},{"name":"banana","color":"yellow"}]`
+
+	get, err := MarshalFruits(fruits)
+	if err != nil {
+		t.Fatalf("failed to marshal input fruits objects: %v", err)
+	}
+	if wants != get {
+		t.Fatalf("return value is not correct")
+	}
+}
