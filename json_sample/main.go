@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
 type Fruit struct {
@@ -20,10 +21,32 @@ func UnmarshalFruits(jsonStr string) ([]Fruit, error) {
 }
 
 func MarshalFruits(fruits []Fruit) (string, error) {
-  jsonData, err := json.Marshal(fruits)
-  if err != nil {
+	jsonData, err := json.Marshal(fruits)
+	if err != nil {
 		return "", fmt.Errorf("cannnot marshal input fruits: %w", err)
 	}
 	jsonStr := string(jsonData)
 	return jsonStr, nil
+}
+
+// ファイルから読み込んだ文字列をUnmarshalする関数
+// os.Open, f.Read を使用
+func UnmarshalFruitsFile(path string) ([]Fruit, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("cannot open file: %w", err)
+	}
+	defer f.Close()
+
+	data := make([]byte, 1024)
+	count, err := f.Read(data)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read file: %w", err)
+	}
+
+	fruits := new([]Fruit)
+	if err := json.Unmarshal(data[:count], fruits); err != nil {
+		return nil, fmt.Errorf("cannot unmarshal read file: %w", err)
+	}
+	return *fruits, nil
 }

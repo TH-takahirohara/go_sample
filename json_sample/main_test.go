@@ -38,3 +38,19 @@ func TestMarshalFruits(t *testing.T) {
 		t.Fatalf("return value is not correct")
 	}
 }
+
+func TestUnmarshalFruitsFile(t *testing.T) {
+	path := "testdata/test_fruits.json"
+	wants := []Fruit{{Name: "apple", Color: "red"}, {Name: "banana", Color: "yellow"}}
+
+	getFruits, err := UnmarshalFruitsFile(path)
+	if err != nil {
+		t.Fatalf("failed to unmarshal input text: %v", err)
+	}
+
+	for i, f := range getFruits {
+		if f != wants[i] {
+			t.Fatalf("return value is not correct")
+		}
+	}
+}
