@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"bytes"
+	"strings"
+	"testing"
+)
 
 func TestUnmarshalFruits(t *testing.T) {
 	testStr := `
@@ -52,5 +56,23 @@ func TestUnmarshalFruitsFile(t *testing.T) {
 		if f != wants[i] {
 			t.Fatalf("return value is not correct")
 		}
+	}
+}
+
+func TestEncodeFruits(t *testing.T) {
+	fruits := []Fruit{
+		{Name: "apple", Color: "red"},
+		{Name: "banana", Color: "yellow"},
+	}
+	wants := `[{"name":"apple","color":"red"},{"name":"banana","color":"yellow"}]`
+	b := new(bytes.Buffer)
+
+	err := EncodeFruits(fruits, b)
+	if err != nil {
+		t.Fatalf("cannot encode: %v", err)
+	}
+
+	if strings.ReplaceAll(b.String(), "\n", "") != wants {
+		t.Fatalf("wanted string is %v, but got string is %v", wants, b.String())
 	}
 }

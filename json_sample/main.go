@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -49,4 +50,13 @@ func UnmarshalFruitsFile(path string) ([]Fruit, error) {
 		return nil, fmt.Errorf("cannot unmarshal read file: %w", err)
 	}
 	return *fruits, nil
+}
+
+func EncodeFruits(fruits []Fruit, w io.Writer) error {
+	enc := json.NewEncoder(w)
+	err := enc.Encode(fruits)
+	if err != nil {
+		return fmt.Errorf("encoder fail: %w", err)
+	}
+	return nil
 }
