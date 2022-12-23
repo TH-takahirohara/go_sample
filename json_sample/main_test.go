@@ -76,3 +76,20 @@ func TestEncodeFruits(t *testing.T) {
 		t.Fatalf("wanted string is %v, but got string is %v", wants, b.String())
 	}
 }
+
+func TestDecodeFruits(t *testing.T) {
+	fruits := new([]Fruit)
+	wants := []Fruit{{Name: "apple", Color: "red"}, {Name: "banana", Color: "yellow"}}
+	s := `[{"name":"apple","color":"red"},{"name":"banana","color":"yellow"}]`
+
+	err := DecodeFruits(fruits, s)
+	if err != nil {
+		t.Fatalf("cannot decode: %v", err)
+	}
+
+	for i, v := range *fruits {
+		if v != wants[i] {
+			t.Fatalf("got %v, but want %v", v, wants[i])
+		}
+	}
+}

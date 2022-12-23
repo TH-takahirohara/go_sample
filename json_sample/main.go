@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 type Fruit struct {
@@ -57,6 +58,15 @@ func EncodeFruits(fruits []Fruit, w io.Writer) error {
 	err := enc.Encode(fruits)
 	if err != nil {
 		return fmt.Errorf("encoder fail: %w", err)
+	}
+	return nil
+}
+
+func DecodeFruits(fruits *[]Fruit, s string) error {
+	dec := json.NewDecoder(strings.NewReader(s))
+	err := dec.Decode(fruits)
+	if err != nil {
+		return fmt.Errorf("decoder fail: %w", err)
 	}
 	return nil
 }
