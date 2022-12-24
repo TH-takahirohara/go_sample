@@ -9,6 +9,11 @@ import (
 )
 
 func main() {
+	r := NewRouter()
+	http.ListenAndServe(":8080", r)
+}
+
+func NewRouter() *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -20,11 +25,13 @@ func main() {
 		w.Write([]byte("Hello"))
 	})
 
-	r.Route("/test", func (r chi.Router) {
-		r.Get("/{testId}", func(w http.ResponseWriter, r *http.Request) {
-			testId := chi.URLParam(r, "testId")
-			w.Write([]byte(fmt.Sprintf("testId is %v", testId)))
-		})
+	r.Route("/test", func(r chi.Router) {
+		r.Get("/{testId}", SampleServer)
 	})
-	http.ListenAndServe(":8080", r)
+	return r
+}
+
+func SampleServer(w http.ResponseWriter, r *http.Request) {
+	testId := chi.URLParam(r, "testId")
+	w.Write([]byte(fmt.Sprintf("testId is %v", testId)))
 }
