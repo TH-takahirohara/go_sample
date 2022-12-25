@@ -9,15 +9,15 @@ import (
 )
 
 func TestNewRouter(t *testing.T) {
-	r := NewRouter(context.Background())
-	wr := httptest.NewRecorder()
-	req, err := http.NewRequest(http.MethodGet, "/test/100", nil)
+	mux := NewRouter(context.Background())
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest(http.MethodGet, "/test/100", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	r.ServeHTTP(wr, req)
-	resp := wr.Result()
+	mux.ServeHTTP(w, r)
+	resp := w.Result()
 	if err != nil {
 		t.Fatal(err)
 	}
