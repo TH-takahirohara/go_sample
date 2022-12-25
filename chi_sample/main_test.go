@@ -10,14 +10,14 @@ import (
 
 func TestNewRouter(t *testing.T) {
 	r := NewRouter(context.Background())
-	ts := httptest.NewServer(r)
-	defer ts.Close()
-
-	req, err := http.NewRequest(http.MethodGet, ts.URL+"/test/100", nil)
+	wr := httptest.NewRecorder()
+	req, err := http.NewRequest(http.MethodGet, "/test/100", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp, err := http.DefaultClient.Do(req)
+
+	r.ServeHTTP(wr, req)
+	resp := wr.Result()
 	if err != nil {
 		t.Fatal(err)
 	}
