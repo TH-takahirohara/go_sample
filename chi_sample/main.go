@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -9,11 +10,11 @@ import (
 )
 
 func main() {
-	r := NewRouter()
+	r := NewRouter(context.Background())
 	http.ListenAndServe(":8080", r)
 }
 
-func NewRouter() *chi.Mux {
+func NewRouter(ctx context.Context) *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)

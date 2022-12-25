@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -8,7 +9,7 @@ import (
 )
 
 func TestNewRouter(t *testing.T) {
-	r := NewRouter()
+	r := NewRouter(context.Background())
 	ts := httptest.NewServer(r)
 	defer ts.Close()
 
