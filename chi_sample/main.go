@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -10,8 +12,26 @@ import (
 )
 
 func main() {
-	r := NewRouter(context.Background())
-	http.ListenAndServe(":8080", r)
+	if err := run(context.Background()); err != nil {
+		log.Printf("failed to run server: %v", err)
+	}
+}
+
+func run(ctx context.Context) error {
+	r := NewRouter(ctx)
+	l, err := net.Listen("tcp", fmt.Sprintf(":%d", 8080))
+	if err != nil {
+		return fmt.Errorf("failed to listen: %w", err)
+	}
+
+	url := fmt.Sprintf("http://%s", l.Addr().String())
+	log.Printf("start with: %v", url)
+
+	err = http.Serve(l, r)
+	if err != nil {
+		return fmt.Errorf("failed to serve: %w", err)
+	}
+	return nil
 }
 
 func NewRouter(ctx context.Context) *chi.Mux {
