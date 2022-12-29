@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -20,7 +21,11 @@ func main() {
 }
 
 func run(ctx context.Context) error {
-	db, err := sql.Open("mysql", "user:test@tcp(db:3306)/test")
+	db, err := sql.Open("mysql", fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s",
+		os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME")),
+	)
 	if err != nil {
 		return fmt.Errorf("failed open db: %w", err)
 	}
