@@ -4,9 +4,7 @@ services:
   app:
     depends_on:
       - db
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
       - '18000:8080'
     volumes:
