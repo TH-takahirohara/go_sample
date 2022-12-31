@@ -62,7 +62,7 @@ func NewRouter(ctx context.Context, db *sql.DB) *chi.Mux {
 	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
 		var id int
 		var name string
-		rows, err := db.Query("select id, name from user")
+		rows, err := db.Query("select id, name from users")
 		if err != nil {
 			log.Fatal(err)
 		}

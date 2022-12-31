@@ -13,17 +13,17 @@ services:
       DB_HOST: db
       DB_PORT: 3306
       DB_USER: user
-      DB_PASSWORD: test
-      DB_NAME: test
+      DB_PASSWORD: pass
+      DB_NAME: sample
   db:
     image: mysql:8.0.31
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_USER: user
-      MYSQL_PASSWORD: test
-      MYSQL_DATABASE: test
+      MYSQL_PASSWORD: pass
+      MYSQL_DATABASE: sample
     restart: always
     volumes:
-      - test-db-data:/var/lib/mysql
+      - db-data:/var/lib/mysql
 volumes:
-  test-db-data:
+  db-data:

@@ -1,4 +1,4 @@
-CREATE TABLE `user`
+CREATE TABLE `users`
 (
   `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ユーザーの識別子',
   `name`     VARCHAR(20) NOT NULL COMMENT 'ユーザー名',
