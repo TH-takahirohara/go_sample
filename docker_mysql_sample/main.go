@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -62,6 +63,7 @@ func NewRouter(ctx context.Context, db *sql.DB) *chi.Mux {
 	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
 		var id int
 		var name string
+		arr := []struct{Id int; Name string}{}
 		rows, err := db.Query("select id, name from users")
 		if err != nil {
 			log.Fatal(err)
@@ -72,12 +74,17 @@ func NewRouter(ctx context.Context, db *sql.DB) *chi.Mux {
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println(id, name)
+			arr = append(arr, struct{Id int; Name string}{id, name})
 		}
 		err = rows.Err()
 		if err != nil {
 			log.Fatal(err)
 		}
+		jsonData, err := json.Marshal(arr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(jsonData)
 	})
 
 	return r
