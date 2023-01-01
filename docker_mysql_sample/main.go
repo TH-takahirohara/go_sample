@@ -84,6 +84,7 @@ func NewRouter(ctx context.Context, db *sql.DB) *chi.Mux {
 		if err != nil {
 			log.Fatal(err)
 		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Write(jsonData)
 	})
 
