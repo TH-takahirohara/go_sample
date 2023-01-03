@@ -3,18 +3,20 @@ package main
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/go-sql-driver/mysql"
 )
+
+type application struct {
+	db *sql.DB
+}
 
 func main() {
 	if err := run(context.Background()); err != nil {
@@ -57,74 +59,14 @@ func NewRouter(ctx context.Context, db *sql.DB) *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	app := &application{db: db}
+
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("health ok"))
 	})
 
-	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
-		var id int
-		var name string
-		arr := []struct {
-			Id   int
-			Name string
-		}{}
-		rows, err := db.Query("select id, name from users")
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer rows.Close()
-		for rows.Next() {
-			err := rows.Scan(&id, &name)
-			if err != nil {
-				log.Fatal(err)
-			}
-			arr = append(arr, struct {
-				Id   int
-				Name string
-			}{id, name})
-		}
-		err = rows.Err()
-		if err != nil {
-			log.Fatal(err)
-		}
-		jsonData, err := json.Marshal(arr)
-		if err != nil {
-			log.Fatal(err)
-		}
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.Write(jsonData)
-	})
-
-	r.Post("/users", func(w http.ResponseWriter, r *http.Request) {
-		// JSONリクエストの読み込み
-		// 参考：https://www.twihike.dev/docs/golang-web/json-request
-		ct := r.Header.Get("Content-Type")
-		if !strings.HasPrefix(ct, "application/json") {
-			http.Error(w, "send in JSON format", http.StatusUnsupportedMediaType)
-			return
-		}
-
-		var ns struct{ Name string `json:"name"` }
-		err := json.NewDecoder(r.Body).Decode(&ns)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("invalid json: %v", err), http.StatusBadRequest)
-			return
-		}
-
-		// POSTされたNameのuserを登録する
-		// 参考：http://go-database-sql.org/modifying.html
-		stmt, err := db.Prepare("INSERT INTO users(name) VALUES(?)")
-		if err != nil {
-			http.Error(w, fmt.Sprintf("server error: %v", err), http.StatusInternalServerError)
-			return
-		}
-		_, err = stmt.Exec(ns.Name)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("server error: %v", err), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-	})
+	r.Get("/users", app.getUsers)
+	r.Post("/users", app.postUser)
 
 	return r
 }
